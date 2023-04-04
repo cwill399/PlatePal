@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}User{% endblock %}
+
+{% block content%}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='user.css') }}">
+<h1 align="center">User Profile</h1>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <p>Welcome {{ user.first_name }}!</p>
+            {% for recipe in user_recipes %}
+            <h2><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></h2>
+            <p>{{ recipe.description }}</p>
+            {% endfor %}
+            <h4>Favorited Recipes</h4>
+            {% if user.favorites %}
+            <ul>
+                {% for recipe in user.favorites %}
+                <li>{{ recipe.name }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No favorited recipe.</p>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <p class="card-text">{{ user.bio }}</p>
+            <a href="/createRecipe">Create Recipe</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

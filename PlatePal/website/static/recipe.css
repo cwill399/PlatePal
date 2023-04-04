@@ -1,0 +1,144 @@
+body {
+    background-color: #F2F4F4;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  a {
+    background-color: #2595C7;
+    border-radius: 5px;
+    color: white;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  a:hover {
+    background-color: #1A6D8D;
+  }
+  
+  .topnav {
+    background-color: #2595C7;
+    overflow: hidden;
+    padding: 10px 20px;
+  }
+  
+  .topnav a {
+    color: #FFFFFF;
+    font-size: 20px;
+    text-decoration: none;
+    margin-right: 20px;
+  }
+  
+  .topnav a:hover {
+    color: #333333;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .container h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+  
+  .container p {
+    font-size: 20px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  
+  .container h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  .container .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .container label {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .container input[type=text], 
+  .container input[type=number], 
+  .container textarea {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    font-size: 18px;
+    margin-top: 5px;
+  }
+  
+  .container textarea {
+    height: 150px;
+  }
+  
+  .container button[type=button], 
+  .container input[type=submit] {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2595C7;
+    color: #FFFFFF;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .container button[type=button]:hover, 
+  .container input[type=submit]:hover {
+    background-color: #333333;
+  }
+  
+  .ingredient-wrapper, 
+  .instruction-wrapper {
+    margin-top: 5px;
+    display: flex;
+  }
+  
+  .ingredient-wrapper input[type=text], 
+  .instruction-wrapper textarea {
+    flex-grow: 1;
+    margin-right: 10px;
+  }
+  
+  .ingredient-wrapper button[type=button], 
+  .instruction-wrapper button[type=button] {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    color: #2595C7;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .ingredient-wrapper button[type=button]:hover, 
+  .instruction-wrapper button[type=button]:hover {
+    background-color: #2595C7;
+    color: #FFFFFF;
+  }
+  
+  .alert {
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  .alert-danger {
+    background-color: #F8D7DA
+  }  

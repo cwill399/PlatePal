@@ -1,0 +1,36 @@
+s{% extends "base.html" %}
+
+{% block title %}{{ recipe.title }}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='recipe.css') }}">
+<h1>{{ recipe.title }}</h1>
+<p>{{ recipe.description }}</p>
+
+<h2>Ingredients</h2>
+{% if recipe.ingredients %}
+    <ul>
+    {% for ingredient in recipe.ingredients %}
+        <li>{{ ingredient.text }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No ingredients found.</p>
+{% endif %}
+
+<h2>Instructions</h2>
+{% if recipe.instructions %}
+    <ol>
+    {% for instruction in recipe.instructions %}
+        <li>{{ instruction.text }}</li>
+    {% endfor %}
+    </ol>
+{% else %}
+    <p>No instructions found.</p>
+{% endif %}
+
+
+<p>Servings: {{ recipe.servings }}</p>
+<p>Prep time: {{ recipe.prep_time }}</p>
+<p>Cook time: {{ recipe.cook_time }}</p>
+{% endblock %}

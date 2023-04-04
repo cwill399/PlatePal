@@ -1,0 +1,222 @@
+a:hover {
+    color: navy;
+    box-shadow: inset 200px 0 0 0 #f2f2f2;
+
+}
+
+a {
+    transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+}
+
+/* NAV BAR  */
+.topnav a:hover {
+    color: navy;
+}
+
+label {
+    display: inline-block;
+    width: 120px;
+}
+
+input {
+    display: inline-block;
+    width: 200px;
+}
+
+.login-form {
+    padding: 20px;
+}
+
+.login-form div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.login-form label {
+    flex-basis: 20%;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: right;
+}
+
+
+
+.login-form input {
+    flex-basis: 70%;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.titlebutton h1 {
+    font-family: 'Marker Felt', fantasy;
+    text-transform: uppercase;
+    color: rgb(119, 189, 247);
+    text-decoration: none;
+    text-align: center;
+
+}
+
+.topnav {
+    background-color: rgb(119, 189, 247);
+    overflow: hidden;
+}
+
+
+.topnav .topright {
+    float: right;
+}
+
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: lighter;
+    font-family: sans-serif, Tahoma;
+}
+
+
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+    font-family: 'fantasy';
+}
+
+/* SIGN UP  */
+
+.Register {
+    width: 400px;
+    overflow: hidden;
+    margin: auto;
+    padding: 40px;
+    background: rgb(119, 189, 247);
+    border-radius: 15px;
+    font-weight: lighter;
+    font-family: sans-serif, Tahoma;
+    color: darkblue;
+}
+
+h2 {
+    font-size: 30px;
+    text-align: center;
+    color: #c86464;
+    padding: 15px;
+    font-weight: lighter;
+    font-family: sans-serif, Tahoma;
+}
+
+label {
+    font-size: 20px;
+}
+
+#username {
+    width: 300px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    padding-left: 8px;
+}
+
+#firstName {
+    width: 300px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    padding-left: 8px;
+}
+
+#lastName {
+    width: 300px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    padding-left: 8px;
+}
+
+#email {
+    width: 300px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    padding-left: 8px;
+}
+
+#password {
+    width: 300px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    padding-left: 8px;
+}
+
+#password2 {
+    width: 300px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    padding-left: 8px;
+}
+
+#sub {
+    width: 300px;
+    height: 30px;
+    border: none;
+    border-radius: 17px;
+    padding-left: 7px;
+    color: darkblue;
+}
+
+span {
+    color: white;
+    font-size: 17px;
+}
+
+/* LOGIN PAGE */
+.login {
+    width: 382px;
+    overflow: hidden;
+    margin: auto;
+    margin: 20 0 0 450px;
+    padding: 80px;
+    background: rgb(119, 189, 247);
+    border-radius: 15px;
+    font-weight: lighter;
+    font-family: sans-serif, Tahoma;
+    color: darkblue;
+}
+
+form p {
+    font-size: 9pt;
+}
+
+form a {
+    color: white;
+    border: solid #f2f2f2;
+    border-radius: 2px;
+    padding: 3px
+}

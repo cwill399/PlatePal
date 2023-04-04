@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}About | PaletPal{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='about.css') }}">
+<div>
+  <h1>Welcome to PaletPal</h1>
+  <p class="first">Discover featured recipes and create your own favorites</p>
+</div>
+<div>
+  <p>Our recipe app is designed to help you discover delicious and nutritious meals. With our featured recipes, you can explore new flavors and ingredients, and with our easy-to-use recipe creator, you can personalize your own recipes to suit your tastes and dietary preferences.</p>
+  <p>Whether you're looking for quick and easy weeknight dinners or impressive dishes to serve at a dinner party, our app has everything you need to make cooking a pleasure. And with the ability to save and favorite your recipes, you'll never lose track of your favorite meals.</p>
+</div>
+<div>
+  <h2>Meet the Team</h2>
+  <p>PaletPal was created by Avi Patel and Casey Williams. We wanted to create a website that makes it easy for people to find and create healthy meals. We hope that our app will help you enjoy cooking and eating nutritious meals.</p>
+</div>
+{% endblock %}
