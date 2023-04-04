@@ -33,16 +33,13 @@ def createRecipe():
                         cook_time=form.cook_time.data)
         
         # create and add ingredients to recipe
-        for ingredient_text in form.ingredients.data.split('\n'):
-            if ingredient_text.strip():
-                ingredient = Ingredient(text=ingredient_text.strip())
-                recipe.ingredients.append(ingredient)
+        for ingredient_text in request.form.getlist('ingredients'):
+            ingredient = Ingredient(text=ingredient_text, recipe=recipe)
+            db.session.add(ingredient)
 
-        # create and add instructions to recipe
-        for instruction_text in form.instructions.data.split('\n'):
-            if instruction_text.strip():
-                instruction = Instruction(text=instruction_text.strip())
-                recipe.instructions.append(instruction)
+        for instruction_text in request.form.getlist('instructions'):
+            instruction = Instruction(text=instruction_text, recipe=recipe)
+            db.session.add(instruction)
 
         
         db.session.add(recipe)
