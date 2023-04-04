@@ -12,7 +12,6 @@
             <p>Welcome {{ user.first_name }}!</p>
             {% for recipe in user_recipes %}
             <h2><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></h2>
-            <p>{{ recipe.description }}</p>
             {% endfor %}
             <h4>Favorited Recipes</h4>
             {% if user.favorites %}
