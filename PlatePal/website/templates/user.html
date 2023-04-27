@@ -17,7 +17,7 @@
             {% if user.favorites %}
             <ul>
                 {% for recipe in user.favorites %}
-                <li>{{ recipe.name }}</li>
+                <li><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></li>
                 {% endfor %}
             </ul>
             {% else %}

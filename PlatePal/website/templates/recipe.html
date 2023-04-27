@@ -6,31 +6,70 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='recipe.css') }}">
 <h1>{{ recipe.title }}</h1>
 <p>{{ recipe.description }}</p>
-
+<h1>{{ recipe.title }}</h1>
+{% if recipe.tags %}
+<p>Tags: {% for tag in recipe.tags %}{{ tag.text }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+{% endif %}
 <h2>Ingredients</h2>
 {% if recipe.ingredients %}
-    <ul>
+<ul>
     {% for ingredient in recipe.ingredients %}
-        <li>{{ ingredient.text }}</li>
+    <li>{{ ingredient.text }}</li>
     {% endfor %}
-    </ul>
+</ul>
 {% else %}
-    <p>No ingredients found.</p>
+<p>No ingredients found.</p>
 {% endif %}
 
 <h2>Instructions</h2>
 {% if recipe.instructions %}
-    <ol>
+<ol>
     {% for instruction in recipe.instructions %}
-        <li>{{ instruction.text }}</li>
+    <li>{{ instruction.text }}</li>
     {% endfor %}
-    </ol>
+</ol>
 {% else %}
-    <p>No instructions found.</p>
+<p>No instructions found.</p>
 {% endif %}
 
 
 <p>Servings: {{ recipe.servings }}</p>
 <p>Prep time: {{ recipe.prep_time }}</p>
 <p>Cook time: {{ recipe.cook_time }}</p>
+
+<h2>Comments</h2>
+{% if recipe.comments %}
+<ul>
+    {% for comment in recipe.comments %}
+    <li>{{ comment.user }}: {{ comment.text }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No comments found.</p>
+{% endif %}
+<h2>Add Comment</h2>
+<form method="POST" action="{{ url_for('views.addComment', recipe_id=recipe.id) }}">
+    <textarea name="comment_text" required></textarea>
+    <br>
+    <input type="submit" value="Add Comment">
+</form>
+
+<form action="{{ url_for('views.likeRecipe', recipe_id=recipe.id) }}" method="POST">
+    <button type="submit" name="like" value="like" class="btn btn-primary">Like</button>
+    <button type="submit" name="like" value="dislike" class="btn btn-primary">Dislike</button>
+</form>
+<p>Likes: {{ recipe.likes }}</p>
+
+{% if current_user.is_authenticated %}
+<form action="{{ url_for('views.favorite_recipe', recipe_id=recipe.id) }}" method="POST">
+    {% if recipe in current_user.favorites %}
+    <button type="submit" name="favorite" value="unfavorite" class="btn btn-outline-danger"><i
+            class="bi bi-heart-fill"></i> Unfavorite</button>
+    {% else %}
+    <button type="submit" name="favorite" value="favorite" class="btn btn-outline-primary"><i class="bi bi-heart"></i>
+        Favorite</button>
+    {% endif %}
+</form>
+{% endif %}
+
 {% endblock %}

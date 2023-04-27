@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from . import db
 import json
 from .forms import createRecipeForm
-from .models import Recipe, User, Ingredient, Instruction
+from .models import Recipe, User, Ingredient, Instruction, Tags, Comments, Favorites
 
 views = Blueprint('views', __name__)
 
@@ -30,7 +30,9 @@ def createRecipe():
                         description=form.description.data,
                         servings=form.servings.data,
                         prep_time=form.prep_time.data,
-                        cook_time=form.cook_time.data)
+                        cook_time=form.cook_time.data,
+                        likes = 0)
+        recipe.tags.append(Tags(text="Flagged for Review"))
         
         # create and add ingredients to recipe
         for ingredient_text in request.form.getlist('ingredients'):
@@ -59,9 +61,61 @@ def about():
 @login_required
 def recipe(recipe_id):
     recipe = Recipe.query.get_or_404(recipe_id)
+
     return render_template("recipe.html", recipe=recipe, user=current_user)
 
 @views.route('/recipes', methods=['GET'])
 def recipes():
     recipes = Recipe.query.all()
     return render_template('recipes.html', recipes=recipes, user=current_user)
+
+@views.route('/recipes/<int:recipe_id>/comments', methods=['POST'])
+@login_required
+def addComment(recipe_id):
+    comment_text = request.form['comment_text']
+    recipe = Recipe.query.get_or_404(recipe_id)
+    comment = Comments(text=comment_text, recipe=recipe)
+    db.session.add(comment)
+    db.session.commit()
+    flash('Your comment has been added!', 'success')
+    return redirect(url_for('views.recipe', recipe_id=recipe_id))
+
+@views.route('/recipes/<int:recipe_id>/likes', methods=['POST'])
+@login_required
+def likeRecipe(recipe_id):
+    recipe = Recipe.query.filter_by(id=recipe_id).first()
+
+    if request.form['like'] == 'like':
+        recipe.likes += 1
+    elif request.form['like'] == 'dislike':
+        recipe.likes -= 1
+
+    db.session.commit()
+
+    return redirect(url_for('views.recipe', recipe_id=recipe_id))
+
+@views.route('/recipe/<int:recipe_id>/favorite', methods=['POST'])
+@login_required
+def favorite_recipe(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+    user = current_user
+
+    # Check if the user has already favorited this recipe
+    if recipe in user.favorites:
+        # Remove favorite
+        user.favorites.remove(recipe)
+        db.session.commit()
+        flash('Recipe unfavorited!', 'success')
+    else:
+        # Add favorite
+        user.favorites.append(recipe)
+        db.session.commit()
+        flash('Recipe favorited!', 'success')
+
+    return redirect(url_for('views.recipe', recipe_id=recipe_id))
+
+
+
+
+
+
