@@ -141,4 +141,27 @@ body {
   
   .alert-danger {
     background-color: #F8D7DA
-  }  
+  } 
+
+  .container button[type=button],
+.container input[type=submit],
+.container button[type=submit] {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2595C7;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s ease-in-out;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.container button[type=button]:hover,
+.container input[type=submit]:hover,
+.container button[type=submit]:hover {
+  background-color: #1A6D8D;
+}
