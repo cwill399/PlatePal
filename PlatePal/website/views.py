@@ -186,13 +186,6 @@ def editRecipe(recipe_id):
     recipe = Recipe.query.get_or_404(recipe_id)
     form = editRecipeForm()
 
-    # populate the form fields with existing data
-    #form.title.data = recipe.title
-    #form.description.data = recipe.description
-    #form.servings.data = recipe.servings
-    #form.prep_time.data = recipe.prep_time
-    #form.cook_time.data = recipe.cook_time
-
     if form.validate_on_submit():
         # update the recipe data
         recipe.title = form.title.data
@@ -219,6 +212,11 @@ def editRecipe(recipe_id):
         flash('Recipe edited successfully!', 'success')
         return redirect(url_for('views.recipe', recipe_id=recipe.id))
 
+    form.title.data = recipe.title
+    form.description.data = recipe.description
+    form.servings.data = recipe.servings
+    form.prep_time.data = recipe.prep_time
+    form.cook_time.data = recipe.cook_time
     # fetch the existing ingredients and instructions
     ingredients = Ingredient.query.filter_by(recipe_id=recipe_id).all()
     instructions = Instruction.query.filter_by(recipe_id=recipe_id).all()

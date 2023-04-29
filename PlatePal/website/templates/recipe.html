@@ -13,7 +13,6 @@
 
 <h1>{{ recipe.title }}</h1>
 <p>{{ recipe.description }}</p>
-<h1>{{ recipe.title }}</h1>
 
 {% if current_user == recipe.user %}
 <a href="{{ url_for('views.editRecipe', recipe_id=recipe.id) }}">Edit Recipe</a>
