@@ -223,5 +223,9 @@ def editRecipe(recipe_id):
 
     return render_template('editRecipe.html', title='Edit Recipe', recipe_id=recipe_id, form=form, user=current_user, ingredients=ingredients, instructions=instructions)
 
-
-
+@views.route('/search')
+def search():
+    search_query = request.args.get('search')
+    filtered_recipes = Recipe.query.filter(Recipe.title.ilike(f'%{search_query}%')).all()
+    user = current_user # Assuming you're using Flask-Login for authentication
+    return render_template('search.html', recipes=filtered_recipes, search_query=search_query, user=user)

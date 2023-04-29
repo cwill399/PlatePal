@@ -6,9 +6,18 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='recipes.css') }}">
 
     <h1>Recipes</h1>
+    <form action="{{ url_for('views.search') }}" method="GET">
+        <label for="search">Search:</label>
+        <input type="text" id="search" name="search">
+        <button type="submit">Submit</button>
+    </form>
     <ul>
         {% for recipe in recipes %}
-            <li><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></li>
+            {% if search and search.lower() in recipe.tags %}
+                <li><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></li>
+            {% elif not search %}
+                <li><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></li>
+            {% endif %}
         {% endfor %}
     </ul>
 {% endblock %}
