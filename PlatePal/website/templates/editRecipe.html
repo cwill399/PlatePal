@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='createRecipe.css') }}">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">{{ title }}</div>
+
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            {{ form.title.label(class="form-control-label") }}
+                            {{ form.title(class="form-control") }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.description.label(class="form-control-label") }}
+                            {{ form.description(class="form-control") }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.servings.label(class="form-control-label") }}
+                            {{ form.servings(class="form-control") }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.prep_time.label(class="form-control-label") }}
+                            {{ form.prep_time(class="form-control") }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.cook_time.label(class="form-control-label") }}
+                            {{ form.cook_time(class="form-control") }}
+                        </div>
+
+                        <hr>
+
+                        <h4>Ingredients</h4>
+
+                        {% for ingredient in ingredients %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="ingredients" value="{{ ingredient.text }}"
+                                required>
+                        </div>
+                        {% endfor %}
+
+                        <button type="button" class="btn btn-secondary" onclick="addIngredient()">Add
+                            Ingredient</button>
+
+                        <hr>
+
+                        <h4>Instructions</h4>
+
+                        {% for instruction in instructions %}
+                        <div class="form-group">
+                            <textarea class="form-control" name="instructions" rows="3"
+                                required>{{ instruction.text }}</textarea>
+                        </div>
+                        {% endfor %}
+
+                        <button type="button" class="btn btn-secondary" onclick="addInstruction()">Add
+                            Instruction</button>
+
+                        <hr>
+
+                        <button type="submit" class="btn btn-primary">Update Recipe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function addIngredient() {
+        var ingredientsDiv = document.querySelector(".ingredients");
+
+        var ingredientWrapper = document.createElement("div");
+        ingredientWrapper.classList.add("ingredient-wrapper");
+
+        var ingredient = document.createElement("input");
+        ingredient.type = "text";
+        ingredient.name = "ingredients";
+        ingredient.placeholder = "Ingredient";
+        ingredient.required = true;
+
+        var removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.innerHTML = "Remove";
+        removeButton.onclick = function () {
+            ingredientWrapper.remove();
+        };
+
+        ingredientWrapper.appendChild(ingredient);
+        ingredientWrapper.appendChild(removeButton);
+
+        ingredientsDiv.appendChild(ingredientWrapper);
+    }
+
+    function addInstruction() {
+        var instructionsDiv = document.querySelector(".instructions");
+
+        var instructionWrapper = document.createElement("div");
+        instructionWrapper.classList.add("instruction-wrapper");
+
+        var instruction = document.createElement("textarea");
+        instruction.name = "instructions";
+        instruction.placeholder = "Instruction";
+        instruction.required = true;
+
+        var removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.innerHTML = "Remove";
+        removeButton.onclick = function () {
+            instructionWrapper.remove();
+        };
+
+        instructionWrapper.appendChild(instruction);
+        instructionWrapper.appendChild(removeButton);
+
+        instructionsDiv.appendChild(instructionWrapper);
+    }
+</script>
+{% endblock %}

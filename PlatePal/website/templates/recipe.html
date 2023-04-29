@@ -4,12 +4,50 @@
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='recipe.css') }}">
+
+{% if user.is_authenticated and (user.email == 'admin@platepal.com' or recipe.user_id == current_user.id) %}
+<form action="{{ url_for('views.delete_recipe', recipe_id=recipe.id) }}" method="POST">
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>
+{% endif %}
+
 <h1>{{ recipe.title }}</h1>
 <p>{{ recipe.description }}</p>
 <h1>{{ recipe.title }}</h1>
-{% if recipe.tags %}
-<p>Tags: {% for tag in recipe.tags %}{{ tag.text }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+
+{% if current_user == recipe.user %}
+<a href="{{ url_for('views.editRecipe', recipe_id=recipe.id) }}">Edit Recipe</a>
 {% endif %}
+
+{% if recipe.tags %}
+<div>
+    <p>Tags:</p>
+    <ul>
+        {% for tag in recipe.tags %}
+        <li>{{ tag.text }}
+            {% if user.is_authenticated and user.email == 'admin@platepal.com' %}
+            <form action="{{ url_for('views.remove_tag', recipe_id=recipe.id, tag_id=tag.id) }}" method="POST">
+                {{ tag_form.hidden_tag() }}
+                {{ tag_form.submit_remove(class="btn btn-link btn-sm text-danger") }}
+            </form>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if user.is_authenticated and user.email == 'admin@platepal.com' %}
+<form action="{{ url_for('views.add_tag', recipe_id=recipe.id) }}" method="POST">
+    {{ tag_form.hidden_tag() }}
+    <div class="form-group">
+        {{ tag_form.tags.label }} {{ tag_form.tags }} {{ tag_form.submit_add(class="btn btn-primary") }}
+    </div>
+</form>
+{% endif %}
+
+
+
 <h2>Ingredients</h2>
 {% if recipe.ingredients %}
 <ul>
@@ -41,18 +79,32 @@
 {% if recipe.comments %}
 <ul>
     {% for comment in recipe.comments %}
-    <li>{{ comment.user }}: {{ comment.text }}</li>
+    <div class="card mt-4">
+        <div class="card-body">
+            <p class="card-text"><strong>{{ comment.user.first_name }}</strong>: {{ comment.text }}</p>
+            {% if current_user == (comment.user or user.email == 'admin@platepal.com') %}
+            <form method="POST" action="{{ url_for('views.deleteComment', recipe_id=recipe.id, comment_id=comment.id) }}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
     {% endfor %}
 </ul>
 {% else %}
 <p>No comments found.</p>
 {% endif %}
+
 <h2>Add Comment</h2>
-<form method="POST" action="{{ url_for('views.addComment', recipe_id=recipe.id) }}">
+<form method="POST" action="{{ url_for('views.addComment', recipe_id=recipe.id, user_id=current_user.id) }}">
     <textarea name="comment_text" required></textarea>
     <br>
     <input type="submit" value="Add Comment">
 </form>
+
+
+
+
 
 <form action="{{ url_for('views.likeRecipe', recipe_id=recipe.id) }}" method="POST">
     <button type="submit" name="like" value="like" class="btn btn-primary">Like</button>

@@ -21,10 +21,10 @@ class Recipe(db.Model):
     servings = db.Column(db.Integer, nullable=False)
     prep_time = db.Column(db.Integer, nullable=False)
     cook_time = db.Column(db.Integer, nullable=False)
-    ingredients = db.relationship('Ingredient', backref='recipe', lazy=True)
-    instructions = db.relationship('Instruction', backref='recipe', lazy=True)
-    tags = db.relationship('Tags', backref='recipe', lazy=True)
-    comments = db.relationship('Comments', backref='recipe', lazy=True)
+    ingredients = db.relationship('Ingredient', backref='recipe', lazy=True, cascade='all, delete')
+    instructions = db.relationship('Instruction', backref='recipe', lazy=True, cascade='all, delete')
+    tags = db.relationship('Tags', backref='recipe', lazy=True, cascade='all, delete')
+    comments = db.relationship('Comments', backref='recipe', lazy=True, cascade='all, delete-orphan')
     likes = db.Column(db.Integer, default=0)
 
 
@@ -32,28 +32,29 @@ class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(256), nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey(
-        'recipe.id'), nullable=False)
+        'recipe.id', ondelete='cascade'), nullable=False)
 
 
 class Instruction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(1024), nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey(
-        'recipe.id'), nullable=False)
+        'recipe.id', ondelete='cascade'), nullable=False)
 
 
 class Tags(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(64))
     recipe_id = db.Column(db.Integer, db.ForeignKey(
-        'recipe.id'), nullable=False)
+        'recipe.id', ondelete='cascade'), nullable=False)
 
 
 class Comments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(1024))
-    recipe_id = db.Column(db.Integer, db.ForeignKey(
-        'recipe.id'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id', ondelete='cascade'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='cascade'), nullable=False)
+    user = db.relationship('User', backref=db.backref('comments', lazy=True))
 
 
 class Favorites(db.Model):
