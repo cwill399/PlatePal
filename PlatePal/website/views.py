@@ -223,16 +223,19 @@ def editRecipe(recipe_id):
 
     return render_template('editRecipe.html', title='Edit Recipe', recipe_id=recipe_id, form=form, user=current_user, ingredients=ingredients, instructions=instructions)
 
-@views.route('/filter')
+@views.route('/filter', methods=['GET'])
 def filter():
-    search_query = request.args.get('search')
     tags = request.args.getlist('tags')
-    filtered_recipes = Recipe.query.filter(Recipe.tags.any(Tags.text.in_(tags)))
+    search_query = request.args.get('search')
     
     if search_query:
-        filtered_recipes = filtered_recipes.filter(Recipe.title.ilike(f'%{search_query}%'))
+        filtered_recipes = Recipe.query.filter(Recipe.title.ilike(f'%{search_query}%'))
+    else:
+        filtered_recipes = Recipe.query
+    
+    if tags:
+        filtered_recipes = filtered_recipes.join(Recipe.tags).filter(Tags.text.in_(tags))
     
     filtered_recipes = filtered_recipes.all()
-    
     user = current_user
-    return render_template('recipes.html', recipes=filtered_recipes, search_query=search_query, tags=tags, user=user)
+    return render_template('recipes.html', recipes=filtered_recipes, user=user)
