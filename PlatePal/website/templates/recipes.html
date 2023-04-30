@@ -11,6 +11,29 @@
         <input type="text" id="search" name="search">
         <button type="submit">Submit</button>
     </form>
+        <form action="{{ url_for('views.filter') }}" method="GET">        
+            <div>
+                <input type="checkbox" id="vegan" name="vegan" value="Vegan">
+                <label for="vegan">Vegan</label>
+            </div>
+            <div>
+                <input type="checkbox" id="vegetarian" name="vegetarian" value="Vegetarian">
+                <label for="vegetarian">Vegetarian</label>
+            </div>
+            <div>
+                <input type="checkbox" id="keto" name="keto" value="Keto">
+                <label for="keto">Keto</label>
+            </div>
+            <div>
+                <input type="checkbox" id="kosher" name="kosher" value="Kosher">
+                <label for="kosher">Kosher</label>
+            </div>
+            <div>
+                <input type="checkbox" id="dairy_free" name="dairy_free" value="Dairy Free">
+                <label for="dairy_free">Dairy Free</label>
+            </div>
+            <button type="submit">Filter</button>
+        </form>
     <ul>
         {% for recipe in recipes %}
             {% if search and search.lower() in recipe.tags %}

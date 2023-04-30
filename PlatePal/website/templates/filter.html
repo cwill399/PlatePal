@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Filtered Recipes{% endblock %}
+
+{% block content %}
+<h1>Filtered Recipes</h1>
+{% if filtered_recipes %}
+  <ul>
+    {% for recipe in filtered_recipes %}
+      <li>
+        <h2><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></h2>
+        <p>{{ recipe.description }}</p>
+        <ul>
+          {% for tag in recipe.tags %}
+            <li>{{ tag }}</li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No recipes found with the selected filters.</p>
+{% endif %}
+{% endblock %}

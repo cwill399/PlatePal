@@ -227,5 +227,28 @@ def editRecipe(recipe_id):
 def search():
     search_query = request.args.get('search')
     filtered_recipes = Recipe.query.filter(Recipe.title.ilike(f'%{search_query}%')).all()
-    user = current_user # Assuming you're using Flask-Login for authentication
+    user = current_user
     return render_template('search.html', recipes=filtered_recipes, search_query=search_query, user=user)
+
+@views.route('/filter')
+def filter():
+    search_query = request.args.get('search')
+    tags = []
+    if request.args.get('vegan'):
+        tags.append('Vegan')
+    if request.args.get('vegetarian'):
+        tags.append('Vegetarian')
+    if request.args.get('keto'):
+        tags.append('Keto')
+    if request.args.get('kosher'):
+        tags.append('Kosher')
+    if request.args.get('dairy_free'):
+        tags.append('Dairy Free')
+    
+    if tags:
+        filtered_recipes = Recipe.query.filter(Recipe.tags.any(Tags.text.in_(tags))).all()
+    else:
+        filtered_recipes = Recipe.query.all()
+        
+    user = current_user
+    return render_template('recipes.html', recipes=filtered_recipes, search_query=search_query, user=user)
