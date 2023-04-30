@@ -6,34 +6,33 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='recipes.css') }}">
 
     <h1>Recipes</h1>
-    <form action="{{ url_for('views.search') }}" method="GET">
-        <label for="search">Search:</label>
-        <input type="text" id="search" name="search">
-        <button type="submit">Submit</button>
-    </form>
-        <form action="{{ url_for('views.filter') }}" method="GET">        
+        <form action="{{ url_for('views.filter') }}" method="GET">
+            <label for="search">Search:</label>
+            <input type="text" id="search" name="search" value="{{ search_query }}">
+            <button type="submit">Submit</button>
+            
             <div>
-                <input type="checkbox" id="vegan" name="vegan" value="Vegan">
+                <input type="checkbox" id="vegan" name="tags" value="Vegan" {% if 'Vegan' in tags %}checked{% endif %}>
                 <label for="vegan">Vegan</label>
             </div>
             <div>
-                <input type="checkbox" id="vegetarian" name="vegetarian" value="Vegetarian">
+                <input type="checkbox" id="vegetarian" name="tags" value="Vegetarian" {% if 'Vegetarian' in tags %}checked{% endif %}>
                 <label for="vegetarian">Vegetarian</label>
             </div>
             <div>
-                <input type="checkbox" id="keto" name="keto" value="Keto">
+                <input type="checkbox" id="keto" name="tags" value="Keto" {% if 'Keto' in tags %}checked{% endif %}>
                 <label for="keto">Keto</label>
             </div>
             <div>
-                <input type="checkbox" id="kosher" name="kosher" value="Kosher">
+                <input type="checkbox" id="kosher" name="tags" value="Kosher" {% if 'Kosher' in tags %}checked{% endif %}>
                 <label for="kosher">Kosher</label>
             </div>
             <div>
-                <input type="checkbox" id="dairy_free" name="dairy_free" value="Dairy Free">
+                <input type="checkbox" id="dairy_free" name="tags" value="Dairy Free" {% if 'Dairy Free' in tags %}checked{% endif %}>
                 <label for="dairy_free">Dairy Free</label>
-            </div>
-            <button type="submit">Filter</button>
+            </div>  
         </form>
+        
     <ul>
         {% for recipe in recipes %}
             {% if search and search.lower() in recipe.tags %}
