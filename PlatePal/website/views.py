@@ -227,15 +227,21 @@ def editRecipe(recipe_id):
 def filter():
     tags = request.args.getlist('tags')
     search_query = request.args.get('search')
-    
-    if search_query:
+    ingredient_query = request.args.get('ingredient_search')
+
+    if search_query and not ingredient_query:
         filtered_recipes = Recipe.query.filter(Recipe.title.ilike(f'%{search_query}%'))
+    elif ingredient_query and not search_query:
+        filtered_recipes = Recipe.query.join(Recipe.ingredients).filter(Ingredient.text.ilike(f'%{ingredient_query}%'))
+    elif search_query and ingredient_query:
+        filtered_recipes = Recipe.query.filter(Recipe.title.ilike(f'%{search_query}%')).join(Recipe.ingredients).filter(Ingredient.text.ilike(f'%{ingredient_query}%'))
     else:
         filtered_recipes = Recipe.query
-    
+
     if tags:
         filtered_recipes = filtered_recipes.join(Recipe.tags).filter(Tags.text.in_(tags))
-    
+
     filtered_recipes = filtered_recipes.all()
     user = current_user
     return render_template('recipes.html', recipes=filtered_recipes, user=user)
+

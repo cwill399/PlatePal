@@ -7,10 +7,14 @@
 
     <h1>Recipes</h1>
         <form action="{{ url_for('views.filter') }}" method="GET">
-            <label for="search">Search:</label>
-            <input type="text" id="search" name="search" value="{{ search_query }}">
-            <button type="submit">Submit</button>
-            
+            <div>
+                <label for="search">Search by recipe name:</label>
+                <input type="text" id="search" name="search" placeholder="Enter recipe name" value="{{ search_query }}">
+            </div>
+            <div>
+                <label for="ingredient_search">Search by ingredient name:</label>
+                <input type="text" id="ingredient_search" name="ingredient_search" placeholder="Enter ingredient name" value="{{ ingredient_search_query }}">
+            </div>
             <div>
                 <input type="checkbox" id="vegan" name="tags" value="Vegan" {% if 'Vegan' in tags %}checked{% endif %}>
                 <label for="vegan">Vegan</label>
@@ -30,7 +34,8 @@
             <div>
                 <input type="checkbox" id="dairy_free" name="tags" value="Dairy Free" {% if 'Dairy Free' in tags %}checked{% endif %}>
                 <label for="dairy_free">Dairy Free</label>
-            </div>  
+            </div>
+            <button type="submit">Submit</button>
         </form>
         
     <ul>
