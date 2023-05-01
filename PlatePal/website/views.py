@@ -10,8 +10,6 @@ from sqlalchemy import asc, desc
 views = Blueprint('views', __name__)
 
 # Define a route for the homepage
-
-
 @views.route('/', methods=['GET', 'POST'])
 def home():
     # Get all recipes from the database
@@ -33,8 +31,6 @@ def user():
     return render_template("user.html", user=user, user_recipes=user_recipes)
 
 # Define a route for the admin page
-
-
 @views.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
@@ -47,8 +43,6 @@ def admin():
     return render_template("admin.html", user=user, flagged_recipes=flagged_recipes)
 
 # Define a route for the create recipe page
-
-
 @views.route('/createRecipe', methods=['GET', 'POST'])
 @login_required
 def createRecipe():
