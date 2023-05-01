@@ -1,20 +1,30 @@
 {% extends "base.html" %}
+
 {% block title %}Login{% endblock %}
+
 {% block content %}
+<!-- Include a link to the login stylesheet -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login.css') }}">
-<form method="POST" class="login-form">
+
+<!-- Create a login form using the POST method -->
+<form method="POST">
   <h3 align="center">Login</h3>
-  <div class="form-row">
-    <div class="form-group">
-      <label for="email" class="username">Email Address</label>
+  
+  <!-- Create a row for the email and password form fields -->
+  <div>
+    <div>
+      <label for="email">Email Address</label>
       <input type="email" id="email" name="email" placeholder="Enter email"/>
     </div>
-    <div class="form-group">
-      <label for="password" class="password">Password</label>
+    <div>
+      <label for="password">Password</label>
       <input type="password" id="password" name="password" placeholder="Enter password"/>
     </div>
   </div>
+  
   <br/>
-  <button type="submit" class="sub">Login</button>
+  
+  <!-- Create a submit button for the form -->
+  <button type="submit">Login</button>
 </form>
 {% endblock %}

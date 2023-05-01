@@ -3,8 +3,10 @@
 {% block title %}Recipes{% endblock %}
 
 {% block content %}
+<!-- Import the CSS file for styling -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='recipes.css') }}">
 
+<!-- Search form for recipe names and ingredients -->
 <h1>Recipes</h1>
     <form action="{{ url_for('views.filter') }}" method="GET">
         <div>
@@ -15,6 +17,7 @@
             <label for="ingredient_search">Search by ingredient name:</label>
             <input type="text" id="ingredient_search" name="ingredient_search" placeholder="Enter ingredient name" value="{{ ingredient_search_query }}">
         </div>
+        <!-- Checkboxes for dietary preferences -->
         <div>
             <input type="checkbox" id="vegan" name="tags" value="Vegan" {% if 'Vegan' in tags %}checked{% endif %}>
             <label for="vegan">Vegan</label>
@@ -35,9 +38,11 @@
             <input type="checkbox" id="dairy_free" name="tags" value="Dairy Free" {% if 'Dairy Free' in tags %}checked{% endif %}>
             <label for="dairy_free">Dairy Free</label>
         </div>
+        <!-- Submit button for the search form -->
         <button type="submit">Submit</button>
     </form>
 
+    <!-- Form for sorting the recipes -->
     <form action="{{ url_for('views.sort_recipes') }}" method="GET">
         <label for="sort">Sort By:</label>
         <select name="sort_option" id="sort">
@@ -46,14 +51,18 @@
             <option value="likes_asc">Likes (Ascending)</option>
             <option value="likes_desc">Likes (Descending)</option>
         </select>
+        <!-- Submit button for the sorting form -->
         <button type="submit">Sort</button>
     </form>    
 
+    <!-- Display a list of the recipes -->
     <ul>
         {% for recipe in recipes %}
             {% if search and search.lower() in recipe.tags %}
+                <!-- Display the recipe if it matches the search query -->
                 <li><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></li>
             {% elif not search %}
+                <!-- Display all recipes if no search query is provided -->
                 <li><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></li>
             {% endif %}
         {% endfor %}

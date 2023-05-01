@@ -3,50 +3,52 @@
 {% block title %}{{ recipe.title }}{% endblock %}
 
 {% block content %}
+<!-- Link to recipe.css -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='recipe.css') }}">
 
+<!-- Delete recipe button for admin or recipe owner -->
 {% if user.is_authenticated and (user.email == 'admin@platepal.com' or recipe.user_id == current_user.id) %}
 <form action="{{ url_for('views.delete_recipe', recipe_id=recipe.id) }}" method="POST">
-    <button type="submit" class="btn btn-danger">Delete</button>
+    <button type="submit">Delete</button>
 </form>
 {% endif %}
 
+<!-- Recipe title and description -->
 <h1>{{ recipe.title }}</h1>
 <p>{{ recipe.description }}</p>
 
+<!-- Edit recipe button for recipe owner -->
 {% if current_user == recipe.user %}
 <a href="{{ url_for('views.editRecipe', recipe_id=recipe.id) }}">Edit Recipe</a>
 {% endif %}
 
+<!-- Display tags for recipe with remove tag button for admin -->
 {% if recipe.tags %}
-<div>
-    <p>Tags:</p>
-    <ul>
-        {% for tag in recipe.tags %}
-        <li>{{ tag.text }}
-            {% if user.is_authenticated and user.email == 'admin@platepal.com' %}
-            <form action="{{ url_for('views.remove_tag', recipe_id=recipe.id, tag_id=tag.id) }}" method="POST">
-                {{ tag_form.hidden_tag() }}
-                {{ tag_form.submit_remove(class="btn btn-link btn-sm text-danger") }}
-            </form>
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-</div>
+<p>Tags:</p>
+<ul>
+    {% for tag in recipe.tags %}
+    <li>{{ tag.text }}
+        {% if user.is_authenticated and user.email == 'admin@platepal.com' %}
+        <form action="{{ url_for('views.remove_tag', recipe_id=recipe.id, tag_id=tag.id) }}" method="POST">
+            {{ tag_form.hidden_tag() }}
+            {{ tag_form.submit_remove() }}
+        </form>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
 {% endif %}
 
+<!-- Add tag form for admin -->
 {% if user.is_authenticated and user.email == 'admin@platepal.com' %}
 <form action="{{ url_for('views.add_tag', recipe_id=recipe.id) }}" method="POST">
     {{ tag_form.hidden_tag() }}
-    <div class="form-group">
-        {{ tag_form.tags.label }} {{ tag_form.tags }} {{ tag_form.submit_add(class="btn btn-primary") }}
-    </div>
+    <label for="{{ tag_form.tags.id }}">Tags:</label>
+    {{ tag_form.tags }} {{ tag_form.submit_add }}
 </form>
 {% endif %}
 
-
-
+<!-- Recipe ingredients -->
 <h2>Ingredients</h2>
 {% if recipe.ingredients %}
 <ul>
@@ -58,6 +60,7 @@
 <p>No ingredients found.</p>
 {% endif %}
 
+<!-- Recipe instructions -->
 <h2>Instructions</h2>
 {% if recipe.instructions %}
 <ol>
@@ -69,31 +72,33 @@
 <p>No instructions found.</p>
 {% endif %}
 
-
+<!-- Recipe servings, prep time, and cook time -->
 <p>Servings: {{ recipe.servings }}</p>
 <p>Prep time: {{ recipe.prep_time }}</p>
 <p>Cook time: {{ recipe.cook_time }}</p>
 
+<!-- Display comments for recipe with delete comment button for comment owner or admin -->
 <h2>Comments</h2>
 {% if recipe.comments %}
 <ul>
     {% for comment in recipe.comments %}
-    <div class="card mt-4">
-        <div class="card-body">
-            <p class="card-text"><strong>{{ comment.user.first_name }}</strong>: {{ comment.text }}</p>
+    <li>
+        <div>
+            <p><strong>{{ comment.user.first_name }}</strong>: {{ comment.text }}</p>
             {% if current_user == (comment.user or user.email == 'admin@platepal.com') %}
-            <form method="POST" action="{{ url_for('views.deleteComment', recipe_id=recipe.id, comment_id=comment.id) }}">
-                <button type="submit" class="btn btn-danger">Delete</button>
+            <form method="POST"
+                action="{{ url_for('views.deleteComment', recipe_id=recipe.id, comment_id=comment.id) }}">
+                <button type="submit">Delete</button>
             </form>
             {% endif %}
         </div>
-    </div>
+    </li>
     {% endfor %}
 </ul>
 {% else %}
 <p>No comments found.</p>
 {% endif %}
-
+<!-- Add Comment form: allows a logged-in user to add a comment to the recipe -->
 <h2>Add Comment</h2>
 <form method="POST" action="{{ url_for('views.addComment', recipe_id=recipe.id, user_id=current_user.id) }}">
     <textarea name="comment_text" required></textarea>
@@ -101,24 +106,22 @@
     <input type="submit" value="Add Comment">
 </form>
 
-
-
-
-
+<!-- Like and Dislike buttons: allows a logged-in user to like or dislike a recipe -->
 <form action="{{ url_for('views.likeRecipe', recipe_id=recipe.id) }}" method="POST">
-    <button type="submit" name="like" value="like" class="btn btn-primary">Like</button>
-    <button type="submit" name="like" value="dislike" class="btn btn-primary">Dislike</button>
+    <button type="submit" name="like" value="like">Like</button>
+    <button type="submit" name="like" value="dislike">Dislike</button>
 </form>
+
+<!-- Display the number of likes the recipe has -->
 <p>Likes: {{ recipe.likes }}</p>
 
 {% if current_user.is_authenticated %}
+<!-- Favorite and Unfavorite buttons: allows a logged-in user to favorite or unfavorite a recipe -->
 <form action="{{ url_for('views.favorite_recipe', recipe_id=recipe.id) }}" method="POST">
     {% if recipe in current_user.favorites %}
-    <button type="submit" name="favorite" value="unfavorite" class="btn btn-outline-danger"><i
-            class="bi bi-heart-fill"></i> Unfavorite</button>
+    <button type="submit" name="favorite" value="unfavorite">Unfavorite</button>
     {% else %}
-    <button type="submit" name="favorite" value="favorite" class="btn btn-outline-primary"><i class="bi bi-heart"></i>
-        Favorite</button>
+    <button type="submit" name="favorite" value="favorite">Favorite</button>
     {% endif %}
 </form>
 {% endif %}
