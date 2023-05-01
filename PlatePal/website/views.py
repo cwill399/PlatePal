@@ -13,7 +13,8 @@ views = Blueprint('views', __name__)
 @views.route('/', methods=['GET', 'POST'])
 def home():
     # Get all recipes from the database
-    recipes = Recipe.query.all()
+    recipes = Recipe.query.filter(
+        Recipe.tags.any(Tags.text == 'FEATURED')).all()
     # Render the home page template with the current user and all recipes
     return render_template("home.html", user=current_user, recipes=recipes)
 
@@ -99,7 +100,8 @@ def recipe(recipe_id):
 
 @views.route('/recipes', methods=['GET'])
 def recipes():
-    recipes = Recipe.query.all()
+    recipes = Recipe.query.filter(
+        Recipe.tags.any(Tags.text != 'FLAGGED')).all()
     return render_template('recipes.html', recipes=recipes, user=current_user)
 
 

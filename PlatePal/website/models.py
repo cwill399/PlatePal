@@ -36,7 +36,7 @@ class Recipe(db.Model):
     cook_time = db.Column(db.Integer, nullable=False)
     ingredients = db.relationship('Ingredient', backref='recipe', lazy=True, cascade='all, delete')
     instructions = db.relationship('Instruction', backref='recipe', lazy=True, cascade='all, delete')
-    tags = db.relationship('Tags', backref='recipe', lazy=True, cascade='all, delete')
+    tags = db.relationship('Tags', backref='recipe', lazy=True, cascade='all, delete-orphan')
     comments = db.relationship('Comments', backref='recipe', lazy=True, cascade='all, delete-orphan')
     likes = db.Column(db.Integer, default=0)
 

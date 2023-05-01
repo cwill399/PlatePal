@@ -4,35 +4,38 @@
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='user.css') }}">
-<h1 align="center">User Profile</h1>
-
-<!-- User info section -->
-<div>
-    <p>Welcome {{ user.first_name }}!</p>
-
-    <!-- User's own recipes section -->
-    <h2>My Recipes</h2>
-    {% for recipe in user_recipes %}
-    <h3><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></h3>
-    {% endfor %}
-
-    <!-- User's favorite recipes section -->
-    <h2>Favorited Recipes</h2>
-    {% if user.favorites %}
-    <ul>
-        {% for recipe in user.favorites %}
-        <li><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No favorited recipe.</p>
-    {% endif %}
+<div class="user-content" align="center">
+<div class="user-profile">
+    <h1 text-align="center">User Profile</h1>
+    <p align="center">Welcome {{ user.first_name }}!</p>
 </div>
 
-<!-- User bio section -->
-<div>
-    <p>{{ user.bio }}</p>
-    <a href="/createRecipe">Create Recipe</a>
+<div class="container">
+    <div class="recipes">
+        <h2>My Recipes</h2>
+        {% for recipe in user_recipes %}
+        <h3><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></h3>
+        {% endfor %}
+    </div>
+
+    <div class="favorites">
+        <h2>Favorited Recipes</h2>
+        {% if user.favorites %}
+        <ul>
+            {% for recipe in user.favorites %}
+            <li><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No favorited recipes</p>
+        {% endif %}
+    </div>
+
+    <div class="create-recipe">
+        <h2>Create a new Recipe:</h2>
+        <a href="/createRecipe">Create Recipe</a>
+    </div>
+</div>
 </div>
 
 {% endblock %}
