@@ -3,24 +3,24 @@
 {% block title %}Admin{% endblock %}
 
 {% block content%}
+<!-- Import user.css file for custom styling -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='user.css') }}">
+<!-- Display the page title -->
 <h1 align="center">Admin</h1>
 
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-8">
-            {% for recipe in flagged_recipes %}
-            <tr>
-                <h2><a href="{{ url_for('views.recipe', recipe_id=recipe.id)}}">{{ recipe.title }}</a></h2>
-                <td>{{ recipe.description }}</td>
-            </tr>
-            {% endfor %}
-        </div>
-        <br>
-        <div class="col-md-4">
-            <a href="/createRecipe">Create Recipe</a>
-        </div>
-    </div>
+<!-- Loop through flagged recipes and display title and description for each recipe -->
+<div>
+    {% for recipe in flagged_recipes %}
+    <tr>
+        <h2><a href="{{ url_for('views.recipe', recipe_id=recipe.id)}}">{{ recipe.title }}</a></h2>
+        <td>{{ recipe.description }}</td>
+    </tr>
+    {% endfor %}
+</div>
+<br>
+<!-- Display a link to create a new recipe -->
+<div>
+    <a href="/createRecipe">Create Recipe</a>
 </div>
 
 {% endblock %}

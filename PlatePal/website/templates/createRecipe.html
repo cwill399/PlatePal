@@ -3,42 +3,54 @@
 {% block title %}Create Recipe{% endblock %}
 
 {% block content %}
+<!-- Import the createRecipe.css file to style the form -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='createRecipe.css') }}">
 <h1>Create Recipe</h1>
+<!-- Create a form to submit recipe details -->
 <form method="POST" action="">
+    <!-- Add the CSRF token to the form to prevent cross-site request forgery -->
     {{ form.csrf_token }}
+    <!-- Input fields for recipe details -->
     {{ form.title.label }} {{ form.title }} <br>
     {{ form.servings.label }} {{ form.servings }} <br>
     {{ form.prep_time.label }} {{ form.prep_time }} <br>
     {{ form.cook_time.label }} {{ form.cook_time }} <br>
     {{ form.description.label }} {{ form.description }} <br><br>
-
+    <!-- Create a section for ingredient inputs -->
     <div class="ingredients">
         {{ form.ingredients.label }} {{ form.ingredients }} <br><br>
     </div>
+    <!-- Add a button to dynamically add more ingredient input fields -->
     <button type="button" onclick="addIngredient()">Add Ingredient</button>
-
+    <!-- Create a section for instructions inputs -->
     <div class="instructions">
         {{ form.instructions.label }} {{ form.instructions }} <br><br>
     </div>
+    <!-- Add a button to dynamically add more instructions input fields -->
     <button type="button" onclick="addInstruction()">Add Instruction</button>
 
     <br><br>
+    <!-- Add a submit button to create the recipe -->
     <input type="submit" value="Create Recipe">
 </form>
+<!-- JavaScript functions to add and remove ingredient and instruction input fields -->
 <script type="text/javascript">
     function addIngredient() {
+        // Find the ingredients section of the form
         var ingredientsDiv = document.querySelector(".ingredients");
 
+        // Create a div to wrap the new ingredient input and remove button
         var ingredientWrapper = document.createElement("div");
         ingredientWrapper.classList.add("ingredient-wrapper");
 
+        // Create the new ingredient input field
         var ingredient = document.createElement("input");
         ingredient.type = "text";
         ingredient.name = "ingredients";
         ingredient.placeholder = "Ingredient";
         ingredient.required = true;
 
+        // Create a button to remove the ingredient input field
         var removeButton = document.createElement("button");
         removeButton.type = "button";
         removeButton.innerHTML = "Remove";
@@ -46,33 +58,39 @@
             ingredientWrapper.remove();
         };
 
+        // Add the new ingredient input and remove button to the ingredient wrapper div
         ingredientWrapper.appendChild(ingredient);
         ingredientWrapper.appendChild(removeButton);
 
+        // Add the ingredient wrapper div to the ingredients section of the form
         ingredientsDiv.appendChild(ingredientWrapper);
     }
 
     function addInstruction() {
+        // Find the instructions section of the form
         var instructionsDiv = document.querySelector(".instructions");
 
+        // Create a div to wrap the new instruction input and remove button
         var instructionWrapper = document.createElement("div");
         instructionWrapper.classList.add("instruction-wrapper");
 
+        // Create the new instruction input field
         var instruction = document.createElement("textarea");
         instruction.name = "instructions";
         instruction.placeholder = "Instruction";
         instruction.required = true;
 
+        // Create a button to remove the instruction input field
         var removeButton = document.createElement("button");
         removeButton.type = "button";
         removeButton.innerHTML = "Remove";
         removeButton.onclick = function () {
             instructionWrapper.remove();
         };
-
+        // Add the new instruction input and remove button to the ingredient wrapper div
         instructionWrapper.appendChild(instruction);
         instructionWrapper.appendChild(removeButton);
-
+        // Add the instruction wrapper div to the ingredients section of the form
         instructionsDiv.appendChild(instructionWrapper);
     }
 </script>

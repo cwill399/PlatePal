@@ -1,21 +1,28 @@
+
+
 {% extends "base.html" %}
 
 {% block title %}About | PaletPal{% endblock %}
 
 {% block content %}
-
+<!-- Import custom CSS file for this page -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='about.css') }}">
+<!-- Introduction section -->
 <div>
   <h1>Welcome to PlatePal</h1>
   <p class="first">Discover featured recipes and create your own favorites</p>
 </div>
+
+<!-- About section -->
 <div>
   <p>Our recipe app is designed to help you discover delicious and nutritious meals. With our featured recipes, you can explore new flavors and ingredients, and with our easy-to-use recipe creator, you can personalize your own recipes to suit your tastes and dietary preferences.</p>
   <p>Whether you're looking for quick and easy weeknight dinners or impressive dishes to serve at a dinner party, our app has everything you need to make cooking a pleasure. And with the ability to save and favorite your recipes, you'll never lose track of your favorite meals.</p>
 </div>
 <div>
+<!-- Image section-->
   <img src="{{ url_for('static', filename='images/aboutGather.jpg') }}" alt="About Gather">
 </div>
+<!-- Meet the Team paragraph -->
 <div>
   <h2>Meet the Team</h2>
   <p>PlatePal was created by Avi Patel and Casey Williams. We wanted to create a website that makes it easy for people to find and create healthy meals. We hope that our app will help you enjoy cooking and eating nutritious meals.</p>
