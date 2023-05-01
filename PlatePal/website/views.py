@@ -4,6 +4,7 @@ from . import db
 import json
 from .forms import createRecipeForm, editRecipeForm, TagForm
 from .models import Recipe, User, Ingredient, Instruction, Tags, Comments, Favorites
+from sqlalchemy import asc, desc
 
 views = Blueprint('views', __name__)
 
@@ -96,9 +97,6 @@ def addComment(recipe_id, user_id):
     flash('Your comment has been added!', 'success')
     return redirect(url_for('views.recipe', recipe_id=recipe_id))
 
-
-
-
 @views.route('/recipes/<int:recipe_id>/likes', methods=['POST', 'GET'])
 @login_required
 def likeRecipe(recipe_id):
@@ -112,7 +110,6 @@ def likeRecipe(recipe_id):
     db.session.commit()
 
     return redirect(url_for('views.recipe', recipe_id=recipe_id))
-
 
 @views.route('/recipe/<int:recipe_id>/favorite', methods=['POST'])
 @login_required
@@ -171,6 +168,7 @@ def delete_recipe(recipe_id):
     flash('Your recipe has been deleted!', 'success')
     return redirect(url_for('views.home'))
 
+
 @views.route('/recipes/<int:recipe_id>/comments/<int:comment_id>/delete', methods=['POST'])
 @login_required
 def deleteComment(recipe_id, comment_id):
@@ -179,6 +177,7 @@ def deleteComment(recipe_id, comment_id):
     db.session.commit()
     flash('Your comment has been deleted.', 'success')
     return redirect(url_for('views.recipe', recipe_id=recipe_id))
+
 
 @views.route('/editRecipe/<int:recipe_id>', methods=['GET', 'POST'])
 @login_required
@@ -194,7 +193,7 @@ def editRecipe(recipe_id):
         recipe.servings = form.servings.data
         recipe.prep_time = form.prep_time.data
         recipe.cook_time = form.cook_time.data
-        
+
         Ingredient.query.filter_by(recipe_id=recipe.id).delete()
         Instruction.query.filter_by(recipe_id=recipe.id).delete()
 
@@ -223,6 +222,7 @@ def editRecipe(recipe_id):
 
     return render_template('editRecipe.html', title='Edit Recipe', recipe_id=recipe_id, form=form, user=current_user, ingredients=ingredients, instructions=instructions)
 
+
 @views.route('/filter', methods=['GET'])
 def filter():
     tags = request.args.getlist('tags')
@@ -230,18 +230,57 @@ def filter():
     ingredient_query = request.args.get('ingredient_search')
 
     if search_query and not ingredient_query:
-        filtered_recipes = Recipe.query.filter(Recipe.title.ilike(f'%{search_query}%'))
+        filtered_recipes = Recipe.query.filter(
+            Recipe.title.ilike(f'%{search_query}%'))
     elif ingredient_query and not search_query:
-        filtered_recipes = Recipe.query.join(Recipe.ingredients).filter(Ingredient.text.ilike(f'%{ingredient_query}%'))
+        filtered_recipes = Recipe.query.join(Recipe.ingredients).filter(
+            Ingredient.text.ilike(f'%{ingredient_query}%'))
     elif search_query and ingredient_query:
-        filtered_recipes = Recipe.query.filter(Recipe.title.ilike(f'%{search_query}%')).join(Recipe.ingredients).filter(Ingredient.text.ilike(f'%{ingredient_query}%'))
+        filtered_recipes = Recipe.query.filter(Recipe.title.ilike(f'%{search_query}%')).join(
+            Recipe.ingredients).filter(Ingredient.text.ilike(f'%{ingredient_query}%'))
     else:
         filtered_recipes = Recipe.query
 
     if tags:
-        filtered_recipes = filtered_recipes.join(Recipe.tags).filter(Tags.text.in_(tags))
+        filtered_recipes = filtered_recipes.join(
+            Recipe.tags).filter(Tags.text.in_(tags))
 
     filtered_recipes = filtered_recipes.all()
     user = current_user
     return render_template('recipes.html', recipes=filtered_recipes, user=user)
 
+
+@views.route('/recipes/sort', methods=['GET'])
+@login_required
+def sort_recipes():
+    option = request.args.get('sort_option')
+    search_query = request.args.get('search', '')
+
+    if option == 'title_asc':
+        sorted_recipes = Recipe.query.order_by(asc(Recipe.title)).all()
+    elif option == 'title_desc':
+        sorted_recipes = Recipe.query.order_by(desc(Recipe.title)).all()
+    elif option == 'likes_asc':
+        sorted_recipes = Recipe.query.order_by(asc(Recipe.likes)).all()
+    elif option == 'likes_desc':
+        sorted_recipes = Recipe.query.order_by(desc(Recipe.likes)).all()
+    else:
+        # sort by number of likes in ascending order by default
+        sorted_recipes = Recipe.query.order_by(asc(Recipe.likes)).all()
+
+    # filter by search query
+    if search_query:
+        sorted_recipes = [
+            recipe for recipe in sorted_recipes if search_query.lower() in recipe.title.lower()]
+
+    # check if user is authenticated to show liked recipes
+    user = current_user
+    if user.is_authenticated:
+        liked_recipes = [like.recipe_id for like in user.likes]
+    for recipe in sorted_recipes:
+        if recipe.id in liked_recipes:
+            recipe.liked = True
+    else:
+        liked_recipes = []
+
+    return render_template('recipes.html', recipes=sorted_recipes, search_query=search_query, liked_recipes=liked_recipes, user=user)

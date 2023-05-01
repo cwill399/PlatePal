@@ -5,6 +5,63 @@ body {
     padding: 0;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    margin: 50px auto;
+    width: 80%;
+}
+
+form>div {
+    margin: 10px 0;
+}
+
+label {
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+input[type="text"],
+input[type="checkbox"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+}
+
+button[type="submit"] {
+    background-color: #2595C7;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+    margin-top: 20px;
+}
+
+button[type="submit"]:hover {
+    background-color: #1A6D8D;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: #2595C7;
+    box-shadow: 0 0 5px #2595C7;
+}
+
+
+input[type="checkbox"]+label {
+    font-size: 16px;
+    margin-left: 5px;
+}
+
 a {
     background-color: #2595C7;
     border-radius: 5px;

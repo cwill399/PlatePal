@@ -11,6 +11,13 @@ class User(db.Model, UserMixin):
     recipes = db.relationship('Recipe', backref='user', lazy=True)
     favorites = db.relationship('Recipe', secondary='favorites', backref=db.backref(
         'favorited_by', lazy='dynamic'))
+    likes = db.relationship('Like', backref='user', lazy=True)
+
+
+class Like(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
 
 
 class Recipe(db.Model):
