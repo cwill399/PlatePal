@@ -6,65 +6,77 @@
 <!-- Import the CSS file for styling -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='recipes.css') }}">
 
-<!-- Search form for recipe names and ingredients -->
-<h1>Recipes</h1>
-    <form action="{{ url_for('views.filter') }}" method="GET">
-        <div>
-            <label for="search">Search by recipe name:</label>
-            <input type="text" id="search" name="search" placeholder="Enter recipe name" value="{{ search_query }}">
-        </div>
-        <div>
-            <label for="ingredient_search">Search by ingredient name:</label>
-            <input type="text" id="ingredient_search" name="ingredient_search" placeholder="Enter ingredient name" value="{{ ingredient_search_query }}">
-        </div>
-        <!-- Checkboxes for dietary preferences -->
-        <div>
-            <input type="checkbox" id="vegan" name="tags" value="Vegan" {% if 'Vegan' in tags %}checked{% endif %}>
-            <label for="vegan">Vegan</label>
-        </div>
-        <div>
-            <input type="checkbox" id="vegetarian" name="tags" value="Vegetarian" {% if 'Vegetarian' in tags %}checked{% endif %}>
-            <label for="vegetarian">Vegetarian</label>
-        </div>
-        <div>
-            <input type="checkbox" id="keto" name="tags" value="Keto" {% if 'Keto' in tags %}checked{% endif %}>
-            <label for="keto">Keto</label>
-        </div>
-        <div>
-            <input type="checkbox" id="kosher" name="tags" value="Kosher" {% if 'Kosher' in tags %}checked{% endif %}>
-            <label for="kosher">Kosher</label>
-        </div>
-        <div>
-            <input type="checkbox" id="dairy_free" name="tags" value="Dairy Free" {% if 'Dairy Free' in tags %}checked{% endif %}>
-            <label for="dairy_free">Dairy Free</label>
-        </div>
-        <!-- Submit button for the search form -->
-        <button type="submit">Submit</button>
-    </form>
+<!-- Main container for the page -->
+<div class="main-container">
 
-    <!-- Form for sorting the recipes -->
-    <form action="{{ url_for('views.sort_recipes') }}" method="GET">
-        <label for="sort">Sort By:</label>
-        <select name="sort_option" id="sort">
-            <option value="title_asc">Title (A-Z)</option>
-            <option value="title_desc">Title (Z-A)</option>
-            <option value="likes_asc">Likes (Ascending)</option>
-            <option value="likes_desc">Likes (Descending)</option>
-        </select>
-        <!-- Submit button for the sorting form -->
-        <button type="submit">Sort</button>
-    </form>    
+    <!-- Search and filter container -->
+    <div class="search-container">
+        <h2>Search and Filter</h2>
+        <form action="{{ url_for('views.filter') }}" method="GET">
+            <div>
+                <label for="search">Search by recipe name:</label>
+                <input type="text" id="search" name="search" placeholder="Enter recipe name" value="{{ search_query }}">
+            </div>
+            <div>
+                <label for="ingredient_search">Search by ingredient name:</label>
+                <input type="text" id="ingredient_search" name="ingredient_search" placeholder="Enter ingredient name"
+                    value="{{ ingredient_search_query }}">
+            </div>
+            <!-- Checkboxes for dietary preferences -->
+            <div>
+                <input type="checkbox" id="vegan" name="tags" value="Vegan" {% if 'Vegan' in tags %}checked{% endif %}>
+                <label for="vegan">Vegan</label>
+            </div>
+            <div>
+                <input type="checkbox" id="vegetarian" name="tags" value="Vegetarian" {% if 'Vegetarian' in tags
+                    %}checked{% endif %}>
+                <label for="vegetarian">Vegetarian</label>
+            </div>
+            <div>
+                <input type="checkbox" id="keto" name="tags" value="Keto" {% if 'Keto' in tags %}checked{% endif %}>
+                <label for="keto">Keto</label>
+            </div>
+            <div>
+                <input type="checkbox" id="kosher" name="tags" value="Kosher" {% if 'Kosher' in tags %}checked{% endif
+                    %}>
+                <label for="kosher">Kosher</label>
+            </div>
+            <div>
+                <input type="checkbox" id="dairy_free" name="tags" value="Dairy Free" {% if 'Dairy Free' in tags
+                    %}checked{% endif %}>
+                <label for="dairy_free">Dairy Free</label>
+            </div>
+            <!-- Submit button for the search form -->
+            <button type="submit">Submit</button>
+        </form>
 
-    <!-- Display a list of the recipes -->
-    <ul>
-        {% for recipe in recipes %}
-            {% if search and search.lower() in recipe.tags %}
-                <!-- Display the recipe if it matches the search query -->
-                <li><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></li>
+        <!-- Form for sorting the recipes -->
+        <form action="{{ url_for('views.sort_recipes') }}" method="GET">
+            <label for="sort">Sort By:</label>
+            <select name="sort_option" id="sort">
+                <option value="title_asc">Title (A-Z)</option>
+                <option value="title_desc">Title (Z-A)</option>
+                <option value="likes_asc">Likes (Ascending)</option>
+                <option value="likes_desc">Likes (Descending)</option>
+            </select>
+            <!-- Submit button for the sorting form -->
+            <button type="submit">Sort</button>
+        </form>
+    </div>
+
+    <!-- Recipe list container -->
+    <div class="recipe-list-container">
+        <h2>Recipes</h2>
+        <ul>
+            {% for recipe in recipes %}
+            {% if search_query and search_query.lower() in recipe.tags %}
+            <!-- Display the recipe if it matches the search query -->
+            <li><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></li>
             {% elif not search %}
-                <!-- Display all recipes if no search query is provided -->
-                <li><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></li>
+            <!-- Display all recipes if no search query is provided -->
+            <li><a href="{{ url_for('views.recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a></li>
             {% endif %}
-        {% endfor %}
-    </ul>
-{% endblock %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endblock %}
