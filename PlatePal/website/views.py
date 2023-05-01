@@ -6,38 +6,57 @@ from .forms import createRecipeForm, editRecipeForm, TagForm
 from .models import Recipe, User, Ingredient, Instruction, Tags, Comments, Favorites
 from sqlalchemy import asc, desc
 
+# Create a Blueprint object to register views with
 views = Blueprint('views', __name__)
+
+# Define a route for the homepage
 
 
 @views.route('/', methods=['GET', 'POST'])
 def home():
+    # Get all recipes from the database
     recipes = Recipe.query.all()
+    # Render the home page template with the current user and all recipes
     return render_template("home.html", user=current_user, recipes=recipes)
+
+# Define a route for the user page
 
 
 @views.route('/user', methods=['GET', 'POST'])
 @login_required
 def user():
+    # Get the current user
     user = current_user
+    # Get all recipes created by the current user from the database
     user_recipes = Recipe.query.filter_by(user_id=user.id).all()
+    # Render the user page template with the current user and their recipes
     return render_template("user.html", user=user, user_recipes=user_recipes)
+
+# Define a route for the admin page
 
 
 @views.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
+    # Get the current user
     user = current_user
+    # Get all recipes that have been flagged by moderators from the database
     flagged_recipes = Recipe.query.filter(
         Recipe.tags.any(Tags.text == 'FLAGGED')).all()
+    # Render the admin page template with the current user and flagged recipes
     return render_template("admin.html", user=user, flagged_recipes=flagged_recipes)
+
+# Define a route for the create recipe page
 
 
 @views.route('/createRecipe', methods=['GET', 'POST'])
 @login_required
 def createRecipe():
+    # Create a form to create a recipe
     form = createRecipeForm()
 
     if form.validate_on_submit():
+        # Create a new recipe object with data from the form
         recipe = Recipe(user_id=current_user.id,
                         title=form.title.data,
                         description=form.description.data,
@@ -45,23 +64,28 @@ def createRecipe():
                         prep_time=form.prep_time.data,
                         cook_time=form.cook_time.data,
                         likes=0)
+        # Add a 'FLAGGED' tag to the recipe by default
         recipe.tags.append(Tags(text="FLAGGED"))
 
-        # create and add ingredients to recipe
+        # Create and add ingredients to the recipe
         for ingredient_text in request.form.getlist('ingredients'):
             ingredient = Ingredient(text=ingredient_text, recipe=recipe)
             db.session.add(ingredient)
 
+        # Create and add instructions to the recipe
         for instruction_text in request.form.getlist('instructions'):
             instruction = Instruction(text=instruction_text, recipe=recipe)
             db.session.add(instruction)
 
+        # Add the new recipe to the database
         db.session.add(recipe)
         db.session.commit()
 
+        # Flash a success message and redirect the user to their user page
         flash('Recipe created successfully!', 'success')
         return redirect(url_for('views.user'))
 
+    # Render the create recipe page template with the form and the current user
     return render_template('createRecipe.html', title='Create Recipe', form=form, user=current_user)
 
 
@@ -97,6 +121,7 @@ def addComment(recipe_id, user_id):
     flash('Your comment has been added!', 'success')
     return redirect(url_for('views.recipe', recipe_id=recipe_id))
 
+
 @views.route('/recipes/<int:recipe_id>/likes', methods=['POST', 'GET'])
 @login_required
 def likeRecipe(recipe_id):
@@ -110,6 +135,7 @@ def likeRecipe(recipe_id):
     db.session.commit()
 
     return redirect(url_for('views.recipe', recipe_id=recipe_id))
+
 
 @views.route('/recipe/<int:recipe_id>/favorite', methods=['POST'])
 @login_required
@@ -135,50 +161,71 @@ def favorite_recipe(recipe_id):
 @views.route('/recipe/<int:recipe_id>/add_tag', methods=['POST'])
 @login_required
 def add_tag(recipe_id):
+    # create a new instance of the TagForm class
     form = TagForm()
 
+    # check if the form data is valid
     if form.validate_on_submit():
+        # retrieve the recipe with the specified ID
         recipe = Recipe.query.get_or_404(recipe_id)
+        # create a new tag and associate it with the recipe
         tag = Tags(text=form.tags.data, recipe_id=recipe_id)
+        # add the tag to the database session and commit the changes
         db.session.add(tag)
         db.session.commit()
+        # display a success message using the Flash function
         flash(f'Tag "{tag.text}" has been added to the recipe.')
     else:
+        # display an error message using the Flash function if form data is invalid
         flash('Error adding tag. Please try again.', 'danger')
 
+    # redirect the user to the recipe page
     return redirect(url_for('views.recipe', recipe_id=recipe_id))
 
 
 @views.route('/recipe/<int:recipe_id>/remove_tag/<int:tag_id>', methods=['POST'])
 @login_required
 def remove_tag(recipe_id, tag_id):
+    # retrieve the tag with the specified ID
     tag = Tags.query.get_or_404(tag_id)
+    # delete the tag from the database session and commit the changes
     db.session.delete(tag)
     db.session.commit()
+    # display a success message using the Flash function
     flash('Tag removed successfully!', 'success')
+    # redirect the user to the recipe page
     return redirect(url_for('views.recipe', recipe_id=recipe_id))
 
 
 @views.route('/recipe/<int:recipe_id>/delete', methods=['POST'])
 @login_required
 def delete_recipe(recipe_id):
+    # retrieve the recipe with the specified ID
     recipe = Recipe.query.get_or_404(recipe_id)
+    # delete the recipe from the database session and commit the changes
     db.session.delete(recipe)
     db.session.commit()
+    # display a success message using the Flash function
     flash('Your recipe has been deleted!', 'success')
+    # redirect the user to the home page
     return redirect(url_for('views.home'))
 
 
 @views.route('/recipes/<int:recipe_id>/comments/<int:comment_id>/delete', methods=['POST'])
 @login_required
 def deleteComment(recipe_id, comment_id):
+    # retrieve the comment with the specified ID
     comment = Comments.query.get_or_404(comment_id)
+    # delete the comment from the database session and commit the changes
     db.session.delete(comment)
     db.session.commit()
+    # display a success message using the Flash function
     flash('Your comment has been deleted.', 'success')
+    # redirect the user to the recipe page
     return redirect(url_for('views.recipe', recipe_id=recipe_id))
 
 
+# This view handles editing a recipe
 @views.route('/editRecipe/<int:recipe_id>', methods=['GET', 'POST'])
 @login_required
 def editRecipe(recipe_id):
@@ -186,7 +233,7 @@ def editRecipe(recipe_id):
     form = editRecipeForm()
 
     if form.validate_on_submit():
-        # update the recipe data
+        # Update the recipe data
         recipe.title = form.title.data
         print(f"Form title: {form.title.data}")
         recipe.description = form.description.data
@@ -194,10 +241,11 @@ def editRecipe(recipe_id):
         recipe.prep_time = form.prep_time.data
         recipe.cook_time = form.cook_time.data
 
+        # Delete the old ingredients and instructions
         Ingredient.query.filter_by(recipe_id=recipe.id).delete()
         Instruction.query.filter_by(recipe_id=recipe.id).delete()
 
-        # update the ingredients and instructions
+        # Add the new ingredients and instructions
         for i, ingredient_text in enumerate(request.form.getlist('ingredients')):
             ingredient = Ingredient(text=ingredient_text, recipe=recipe)
             db.session.add(ingredient)
@@ -206,6 +254,7 @@ def editRecipe(recipe_id):
             instruction = Instruction(text=instruction_text, recipe=recipe)
             db.session.add(instruction)
 
+        # Commit the changes
         db.session.commit()
 
         flash('Recipe edited successfully!', 'success')
@@ -216,13 +265,15 @@ def editRecipe(recipe_id):
     form.servings.data = recipe.servings
     form.prep_time.data = recipe.prep_time
     form.cook_time.data = recipe.cook_time
-    # fetch the existing ingredients and instructions
+
+    # Fetch the existing ingredients and instructions
     ingredients = Ingredient.query.filter_by(recipe_id=recipe_id).all()
     instructions = Instruction.query.filter_by(recipe_id=recipe_id).all()
 
     return render_template('editRecipe.html', title='Edit Recipe', recipe_id=recipe_id, form=form, user=current_user, ingredients=ingredients, instructions=instructions)
 
 
+# This view handles filtering the recipe list by tags, search query, and ingredient query
 @views.route('/filter', methods=['GET'])
 def filter():
     tags = request.args.getlist('tags')
@@ -250,6 +301,7 @@ def filter():
     return render_template('recipes.html', recipes=filtered_recipes, user=user)
 
 
+# This view handles sorting the recipe list by various options
 @views.route('/recipes/sort', methods=['GET'])
 @login_required
 def sort_recipes():
